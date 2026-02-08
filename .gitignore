@@ -1,0 +1,18 @@
+# === FRONTEND ===
+node_modules/
+dist/
+build/
+
+# === BACKEND JAVA ===
+target/
+bin/
+*.class
+
+# === IDEs ===
+.metadata/
+.idea/
+.vscode/
+
+# === SO ===
+.DS_Store
+Thumbs.db
