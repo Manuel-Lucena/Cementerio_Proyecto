@@ -1,0 +1,8 @@
+@use 'variables';
+@use 'mixins';
+@import "bootstrap/dist/css/bootstrap.min.css";
+
+body {
+  margin: 0;
+  font-family: system-ui, sans-serif;
+}

@@ -1,0 +1,41 @@
+@use '../../../styles/_variables' as v;
+@use '../../../styles/_mixins' as m;
+
+.logo {
+  height: 60px;
+  width: auto;
+}
+
+.login-link {
+  display: inline-block;
+  padding: 0.4rem 1.5rem;
+  font-size: 0.85rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  text-decoration: none;
+
+  color: v.$color-texto-claro;
+  background-color: transparent;
+  border: 2px solid v.$color-principal;
+  border-radius: 4px;
+  transition: all 0.3s ease-in-out;
+
+
+  &:hover {
+    background-color: v.$color-principal; 
+    color: white; 
+    border-color: v.$color-principal;
+    transform: translateY(-2px); 
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+  }
+}
+
+.dropdown-menu {
+  filter: none;
+}
+
+.bi-universal-access {
+  display: block;
+  line-height: 1;
+}

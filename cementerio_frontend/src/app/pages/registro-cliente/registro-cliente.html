@@ -1,0 +1,118 @@
+<div class="registro-container">
+  <div class="registro-form shadow-lg p-4 p-md-5 animacion-entrada">
+    
+    <div class="text-center mb-4">
+      <h2 class="fw-bold">Registro de Cliente</h2>
+      <p class="text-muted small">Crea tu cuenta para gestionar tus servicios</p>
+    </div>
+
+    <form [formGroup]="formularioCliente" (ngSubmit)="guardar()" autocomplete="off">
+      
+      <div class="row g-3">
+        
+        <div class="col-12">
+          <label class="form-label">Nombre de Usuario</label>
+          <input type="text" formControlName="nombreUsuario" class="form-control"
+                 placeholder="Ej: juan_perez"
+                 [class.is-invalid]="formularioCliente.get('nombreUsuario')?.invalid && formularioCliente.get('nombreUsuario')?.touched">
+          <div class="invalid-feedback">
+            <span *ngIf="formularioCliente.get('nombreUsuario')?.hasError('required')">El nombre de usuario es obligatorio.</span>
+            <span *ngIf="formularioCliente.get('nombreUsuario')?.hasError('minlength')">Mínimo 4 caracteres.</span>
+          </div>
+        </div>
+
+        <div class="col-md-6">
+          <label class="form-label">Contraseña</label>
+          <div class="input-group">
+            <input [type]="hidePassword ? 'password' : 'text'" 
+                   formControlName="password" 
+                   class="form-control"
+                   autocomplete="new-password"
+                   [class.is-invalid]="formularioCliente.get('password')?.invalid && formularioCliente.get('password')?.touched">
+            <button class="btn btn-outline-secondary" type="button" (click)="hidePassword = !hidePassword">
+              <i [class]="hidePassword ? 'bi bi-eye-slash' : 'bi bi-eye'"></i>
+            </button>
+          </div>
+          <div class="text-danger extra-small mt-1" *ngIf="formularioCliente.get('password')?.invalid && formularioCliente.get('password')?.touched">
+            <small *ngIf="formularioCliente.get('password')?.hasError('required')">La contraseña es obligatoria.</small>
+            <small *ngIf="formularioCliente.get('password')?.hasError('minlength')">Mínimo 6 caracteres.</small>
+          </div>
+        </div>
+
+        <div class="col-md-6">
+          <label class="form-label">Repetir Contraseña</label>
+          <input type="password" class="form-control" formControlName="password_confirm"
+                 autocomplete="new-password"
+                 [class.is-invalid]="formularioCliente.hasError('coincidencia') && formularioCliente.get('password_confirm')?.touched">
+          <div class="invalid-feedback">
+            Las contraseñas no coinciden.
+          </div>
+        </div>
+
+        <div class="col-md-6">
+          <label class="form-label">Nombre</label>
+          <input type="text" formControlName="nombre" class="form-control" 
+                 [class.is-invalid]="formularioCliente.get('nombre')?.invalid && formularioCliente.get('nombre')?.touched">
+        </div>
+
+        <div class="col-md-6">
+          <label class="form-label">Apellidos</label>
+          <input type="text" formControlName="apellidos" class="form-control"
+                 [class.is-invalid]="formularioCliente.get('apellidos')?.invalid && formularioCliente.get('apellidos')?.touched">
+        </div>
+
+        <div class="col-12">
+          <label class="form-label">Email</label>
+          <input type="email" formControlName="email" class="form-control" placeholder="correo@ejemplo.com"
+                 [class.is-invalid]="formularioCliente.get('email')?.invalid && formularioCliente.get('email')?.touched">
+          <div class="invalid-feedback">
+            <span *ngIf="formularioCliente.get('email')?.hasError('required')">El email es obligatorio.</span>
+            <span *ngIf="formularioCliente.get('email')?.hasError('email')">Formato de email no válido.</span>
+          </div>
+        </div>
+
+        <div class="col-md-6">
+          <label class="form-label">Teléfono</label>
+          <input type="text" formControlName="telefono" class="form-control" placeholder="9 cifras"
+                 [class.is-invalid]="formularioCliente.get('telefono')?.invalid && formularioCliente.get('telefono')?.touched">
+          <div class="invalid-feedback">
+            <span *ngIf="formularioCliente.get('telefono')?.hasError('required')">El teléfono es obligatorio.</span>
+            <span *ngIf="formularioCliente.get('telefono')?.errors?.['erroresArray']">
+              {{ formularioCliente.get('telefono')?.errors?.['erroresArray'][0] }}
+            </span>
+          </div>
+        </div>
+
+        <div class="col-md-6">
+          <label class="form-label">Fecha de Nacimiento</label>
+          <input type="date" formControlName="fecha_nacimiento" class="form-control"
+                 [class.is-invalid]="formularioCliente.get('fecha_nacimiento')?.invalid && formularioCliente.get('fecha_nacimiento')?.touched">
+          <div class="invalid-feedback">
+            <span *ngIf="formularioCliente.get('fecha_nacimiento')?.hasError('required')">La fecha es obligatoria.</span>
+            <span *ngIf="formularioCliente.get('fecha_nacimiento')?.errors?.['erroresArray']">
+              {{ formularioCliente.get('fecha_nacimiento')?.errors?.['erroresArray'][0] }}
+            </span>
+          </div>
+        </div>
+
+        <div class="col-12">
+          <label class="form-label">Dirección</label>
+          <input type="text" formControlName="direccion" class="form-control"
+                 [class.is-invalid]="formularioCliente.get('direccion')?.invalid && formularioCliente.get('direccion')?.touched">
+        </div>
+
+        <div class="col-12 mt-4">
+          <button type="submit" class="btn btn-primary w-100 fw-bold py-2 shadow-sm">
+            REGISTRAR CUENTA
+          </button>
+        </div>
+      </div>
+    </form>
+
+    <div class="text-center mt-4 border-top pt-3 d-flex flex-column gap-2">
+      <a routerLink="/login" class="btn-link-custom">¿Ya tienes cuenta? Inicia sesión</a>
+      <a routerLink="/landing" class="btn-link-custom text-muted small">Volver a Inicio</a>
+    </div>
+
+  </div>
+</div>

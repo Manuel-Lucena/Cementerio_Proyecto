@@ -1,0 +1,16 @@
+@use '../../../styles/_variables' as v;
+
+.registro-form {
+  border-radius: 12px;
+  .form-label { font-size: 0.85rem; font-weight: 600; color: v.$color-texto-oscuro; }
+  .form-control {
+    border: 1.5px solid #eee;
+    &:focus { border-color: v.$color-principal; box-shadow: 0 0 0 3px rgba(v.$color-principal, 0.1); }
+  }
+  .btn-primary {
+    background-color: v.$color-principal;
+    border: none;
+    padding: 0.7rem;
+    &:hover { background-color: v.$color-secundario; }
+  }
+}

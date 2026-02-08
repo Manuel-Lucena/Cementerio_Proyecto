@@ -1,0 +1,71 @@
+@use '../../../styles/_mixins' as m;
+
+@include m.modal-angular-basico;
+
+.modal-content-custom {
+    max-width: 900px; 
+}
+
+.grid-sepulturas {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+    gap: 15px;
+    padding: 5px;
+}
+
+.sepultura-card {
+    border: 2px solid #eee;
+    border-radius: 8px;
+    padding: 12px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    min-height: 90px;
+
+    &:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+    }
+
+    .id {
+        display: block;
+        font-weight: bold;
+        font-size: 1.1rem;
+    }
+
+    .posicion {
+        font-size: 0.8rem;
+        color: #666;
+    }
+
+    .badge-estado {
+        font-size: 0.7rem;
+        text-transform: uppercase;
+        font-weight: bold;
+        margin-top: 8px;
+        padding: 2px 6px;
+        border-radius: 4px;
+        align-self: flex-start;
+    }
+
+    // Estados dinámicos
+    &.disponible {
+        border-color: #28a745;
+        background: #f8fff9;
+        .badge-estado { background: #28a745; color: white; }
+    }
+
+    &.ocupada {
+        border-color: #dc3545;
+        background: #fffafa;
+        .badge-estado { background: #dc3545; color: white; }
+    }
+
+    &.reservada {
+        border-color: #ffc107;
+        background: #fffdf5;
+        .badge-estado { background: #ffc107; color: black; }
+    }
+}

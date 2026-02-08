@@ -1,0 +1,50 @@
+@use '../../../styles/_variables' as v;
+
+.titulo-v { color: v.$color-principal; font-weight: 700; }
+
+.table-container {
+  border: 1px solid #dee2e6;
+  border-radius: 8px;
+  overflow: hidden;
+  
+  thead {
+    background-color: #f8f9fa;
+    th { font-size: 0.75rem; color: #6c757d; text-transform: uppercase; }
+  }
+}
+
+
+.col-concepto { width: 35%; }
+.col-info     { width: 15%; }
+.col-estado   { width: 15%; }
+.col-gestion  { width: 20%; }
+
+.btn-v {
+  height: 34px;
+  width: 90px;
+  border: none;
+  border-radius: 4px;
+  font-weight: 700;
+  font-size: 0.7rem;
+  cursor: pointer;
+  &.btn-pago { background-color: v.$color-principal; color: white; }
+  &.btn-cancel { background-color: #f8d7da; color: #842029; }
+  &.btn-pdf { width: 120px; background-color: v.$color-fondo-oscuro; color: white; }
+}
+
+.status-pill {
+  width: 100px;
+  padding: 4px 0;
+  font-size: 0.65rem;
+  font-weight: 800;
+  border-radius: 4px;
+  text-align: center;
+  &.pendiente { background-color: #fff3cd; color: #856404; }
+  &.pagada { background-color: #d1e7dd; color: #0f5132; }
+}
+
+.container {
+  min-height: calc(100vh - 250px); 
+}
+
+.x-small { font-size: 0.7rem; }

@@ -1,0 +1,55 @@
+<div class="modal-header bg-principal text-white">
+  <h5 class="modal-title">Seleccionar Servicios</h5>
+  <button type="button" class="btn-close btn-close-white" (click)="onCancelar.emit()"></button>
+</div>
+
+<div class="modal-body">
+  <p class="mb-3 text-muted">Difunto: <strong>{{ difunto.nombre }} {{ difunto.apellidos }}</strong></p>
+  
+  <div class="table-responsive">
+    <table class="table table-hover align-middle">
+      <thead class="table-light">
+        <tr>
+          <th>Servicio</th>
+          <th class="text-end">Precio</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let s of serviciosDisponibles" (click)="toggleServicio(s)">
+          <td>
+            <div class="form-check">
+              <input class="form-check-input" type="checkbox" 
+                     [checked]="serviciosSeleccionados.has(s)"
+                     (click)="$event.stopPropagation(); toggleServicio(s)">
+            </div>
+          </td>
+          <td>
+            <div class="fw-bold text-dark">{{ s.nombreServicio }}</div>
+            <div class="small text-muted">{{ s.descripcion }}</div>
+          </td>
+          <td class="text-end fw-bold text-nowrap">{{ s.coste | number:'1.2-2' }}€</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div *ngIf="serviciosDisponibles.length === 0" class="text-center py-4">
+    <i class="bi bi-info-circle text-muted d-block h1"></i>
+    <p class="text-muted">No hay servicios disponibles para este cementerio.</p>
+  </div>
+
+  <div class="d-flex justify-content-between align-items-center p-3 bg-light rounded mt-3" *ngIf="serviciosDisponibles.length > 0">
+    <span class="text-muted">{{ serviciosSeleccionados.size }} seleccionados</span>
+    <span class="h5 mb-0 fw-bold color-principal-texto">Total: {{ total | number:'1.2-2' }}€</span>
+  </div>
+</div>
+
+<div class="modal-footer border-0">
+  <button class="btn btn-light rounded-pill px-4" [disabled]="cargando" (click)="onCancelar.emit()">Cerrar</button>
+  <button class="btn btn-principal rounded-pill px-4" 
+          [disabled]="serviciosSeleccionados.size === 0 || cargando"
+          (click)="confirmar()">
+    <span *ngIf="!cargando">Contratar ahora</span>
+    <span *ngIf="cargando">Procesando...</span>
+  </button>
+</div>

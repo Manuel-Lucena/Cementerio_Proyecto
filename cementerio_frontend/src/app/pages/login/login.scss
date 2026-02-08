@@ -1,0 +1,54 @@
+@use '../../../styles/variables' as v;
+
+.login-container {
+  min-height: 100vh;
+  background: linear-gradient(135deg, v.$color-fondo-claro 0%, #e9ecef 100%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.login-card {
+  background-color: #ffffff;
+  width: 100%;
+  max-width: 400px;
+  border-radius: 16px;
+  border: none;
+
+  .form-label {
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: v.$color-texto-oscuro;
+  }
+
+  .form-control {
+    border: 1.5px solid #eee;
+    padding: 0.6rem 0.8rem;
+    &:focus {
+      border-color: v.$color-principal;
+      box-shadow: 0 0 0 3px rgba(v.$color-principal, 0.1);
+    }
+  }
+
+  .input-group .btn-outline-secondary {
+    border: 1.5px solid #eee;
+    border-left: none;
+    color: v.$color-principal;
+    &:hover { background: transparent; color: v.$color-secundario; }
+  }
+
+  .btn-primary {
+    background-color: v.$color-principal;
+    border: none;
+    transition: 0.2s;
+    &:hover { background-color: v.$color-secundario; transform: translateY(-1px); }
+  }
+
+  .btn-link-custom {
+    color: v.$color-principal;
+    text-decoration: none;
+    font-size: 0.9rem;
+    font-weight: 500;
+    &:hover { text-decoration: underline; }
+  }
+}

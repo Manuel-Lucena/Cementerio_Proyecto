@@ -1,0 +1,108 @@
+<form [formGroup]="empresaForm" (ngSubmit)="guardar()" class="needs-validation p-2">
+
+  <fieldset class="mb-4">
+    <legend class="text-primary small fw-bold text-uppercase border-bottom pb-2 mb-3">1. Credenciales</legend>
+    <div class="row g-3">
+      <div class="col-md-4">
+        <label class="form-label small fw-bold text-secondary">Usuario</label>
+        <input type="text" formControlName="nombre_usuario" class="form-control" 
+               [readonly]="empresaAEditar" 
+               [class.is-invalid]="empresaForm.get('nombre_usuario')?.invalid && empresaForm.get('nombre_usuario')?.touched">
+        <span class="text-danger extra-small" *ngIf="empresaForm.get('nombre_usuario')?.invalid && empresaForm.get('nombre_usuario')?.touched">
+          Mínimo 4 caracteres.
+        </span>
+      </div>
+
+      <div class="col-md-4">
+        <label class="form-label small fw-bold text-secondary">Contraseña</label>
+        <div class="input-group">
+          <input [type]="hidePassword ? 'password' : 'text'" formControlName="password" class="form-control" placeholder="••••••••"
+                 [class.is-invalid]="empresaForm.get('password')?.invalid && empresaForm.get('password')?.touched">
+          <button class="btn btn-outline-secondary eye-btn" type="button" (click)="hidePassword = !hidePassword">
+            <i [class]="hidePassword ? 'bi bi-eye-slash' : 'bi bi-eye'"></i>
+          </button>
+        </div>
+        <span class="text-danger extra-small" *ngIf="empresaForm.get('password')?.invalid && empresaForm.get('password')?.touched">
+          Mínimo 6 caracteres.
+        </span>
+      </div>
+
+      <div class="col-md-4">
+        <label class="form-label small fw-bold text-secondary">Confirmar Contraseña</label>
+        <input type="password" formControlName="password_confirm" class="form-control" placeholder="••••••••"
+               [class.is-invalid]="empresaForm.hasError('coincidencia') && empresaForm.get('password_confirm')?.touched">
+        <span class="text-danger extra-small" *ngIf="empresaForm.hasError('coincidencia') && empresaForm.get('password_confirm')?.touched">
+          Las contraseñas no coinciden.
+        </span>
+      </div>
+    </div>
+  </fieldset>
+
+  <fieldset class="mb-4">
+    <legend class="text-primary small fw-bold text-uppercase border-bottom pb-2 mb-3">2. Información General</legend>
+
+    <div class="row g-3">
+      <div class="col-md-6 mb-3">
+        <label class="form-label small fw-bold text-secondary">Nombre de la Empresa</label>
+        <input type="text" formControlName="nombre" class="form-control" 
+               [class.is-invalid]="empresaForm.get('nombre')?.invalid && empresaForm.get('nombre')?.touched">
+        <span class="text-danger extra-small" *ngIf="empresaForm.get('nombre')?.invalid && empresaForm.get('nombre')?.touched">
+          Obligatorio.
+        </span>
+      </div>
+
+      <div class="col-md-6 mb-3">
+        <label class="form-label small fw-bold text-secondary">Dirección Postal</label>
+        <input type="text" formControlName="direccion" class="form-control" placeholder="Calle, Número, Ciudad"
+               [class.is-invalid]="empresaForm.get('direccion')?.invalid && empresaForm.get('direccion')?.touched">
+        <span class="text-danger extra-small" *ngIf="empresaForm.get('direccion')?.invalid && empresaForm.get('direccion')?.touched">
+          Dirección obligatoria.
+        </span>
+      </div>
+    </div>
+
+    <div class="row g-3">
+      <div class="col-md-4">
+        <label class="form-label small fw-bold text-secondary">Email Corporativo</label>
+        <input type="email" formControlName="email" class="form-control" 
+               [class.is-invalid]="empresaForm.get('email')?.invalid && empresaForm.get('email')?.touched">
+        <span class="text-danger extra-small" *ngIf="empresaForm.get('email')?.invalid && empresaForm.get('email')?.touched">
+          Email no válido.
+        </span>
+      </div>
+      
+      <div class="col-md-4">
+        <label class="form-label small fw-bold text-secondary">Teléfono</label>
+        <input type="text" formControlName="telefono" class="form-control" 
+               [class.is-invalid]="empresaForm.get('telefono')?.invalid && empresaForm.get('telefono')?.touched">
+        <span class="text-danger extra-small" *ngIf="empresaForm.get('telefono')?.invalid && empresaForm.get('telefono')?.touched">
+          9 dígitos requeridos.
+        </span>
+      </div>
+
+      <div class="col-md-4">
+        <label class="form-label small fw-bold text-secondary">Años Reutilización</label>
+        <input type="number" formControlName="años_reutilizar_nichos" class="form-control" 
+               [class.is-invalid]="empresaForm.get('años_reutilizar_nichos')?.invalid && empresaForm.get('años_reutilizar_nichos')?.touched">
+        <span class="text-danger extra-small" *ngIf="empresaForm.get('años_reutilizar_nichos')?.invalid && empresaForm.get('años_reutilizar_nichos')?.touched">
+          Mínimo 5 años.
+        </span>
+      </div>
+    </div>
+  </fieldset>
+
+  <div class="mb-4">
+    <legend class="text-primary small fw-bold text-uppercase border-bottom pb-2 mb-3">3. Imagen Corporativa</legend>
+    <input type="file" class="form-control" (change)="onFileSelected($event)" accept="image/*">
+  </div>
+
+  <div class="d-flex justify-content-center gap-3 mt-4 pt-4 border-top">
+    <button type="button" class="btn btn-outline-secondary px-5 fw-bold" (click)="alCancelar.emit()">
+      CANCELAR
+    </button>
+    <button type="submit" class="btn btn-dark px-5 fw-bold">
+      {{ empresaAEditar ? 'GUARDAR CAMBIOS' : 'CONFIRMAR ALTA' }}
+    </button>
+  </div>
+
+</form>

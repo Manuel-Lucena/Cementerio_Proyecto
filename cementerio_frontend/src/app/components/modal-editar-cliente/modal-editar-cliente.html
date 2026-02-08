@@ -1,0 +1,99 @@
+<div class="modal-backdrop fade show"></div>
+
+<div class="modal fade show d-block" tabindex="-1" (click)="cerrar()">
+  <div class="modal-dialog modal-lg modal-dialog-centered" (click)="$event.stopPropagation()">
+    <div class="modal-content border-0 bg-transparent">
+      
+      <form [formGroup]="formularioCliente" (ngSubmit)="enviar()" class="registro-form p-4 p-md-5 shadow bg-white rounded">
+        
+        <div class="d-flex justify-content-between align-items-center mb-4">
+          <h2 class="fw-bold mb-0 text-primary">{{ titulo }}</h2>
+          <button type="button" class="btn-close" (click)="cerrar()"></button>
+        </div>
+
+        <div class="row g-3">
+          <div class="col-12">
+            <label class="form-label fw-bold small text-secondary">Usuario</label>
+            <input type="text" formControlName="nombreUsuario" class="form-control"
+                   [readonly]="!!cliente" [class.bg-light]="cliente"
+                   [class.is-invalid]="isInvalid('nombreUsuario')">
+            <div class="invalid-feedback">{{ getErrorMessage('nombreUsuario') }}</div>
+          </div>
+
+          <div class="col-md-6">
+            <label class="form-label fw-bold small text-secondary">
+              Contraseña {{ cliente ? '(Opcional)' : '' }}
+            </label>
+            <div class="input-group">
+              <input [type]="hidePassword ? 'password' : 'text'" 
+                     formControlName="password" 
+                     class="form-control" 
+                     placeholder="******" 
+                     [class.is-invalid]="isInvalid('password')">
+              
+              <button class="btn btn-outline-secondary eye-btn" type="button" (click)="hidePassword = !hidePassword">
+                <i [class]="hidePassword ? 'bi bi-eye-slash' : 'bi bi-eye'"></i>
+              </button>
+            </div>
+            <div class="text-danger extra-small mt-1" *ngIf="isInvalid('password')">
+              {{ getErrorMessage('password') }}
+            </div>
+          </div>
+
+          <div class="col-md-6">
+            <label class="form-label fw-bold small text-secondary">Confirmar Contraseña</label>
+            <input type="password" formControlName="password_confirm" class="form-control" 
+                   placeholder="******" [class.is-invalid]="isInvalid('password_confirm') || formularioCliente.hasError('coincidencia')">
+            <div class="invalid-feedback">{{ getErrorMessage('password_confirm') }}</div>
+          </div>
+
+          <div class="col-md-6">
+            <label class="form-label fw-bold small text-secondary">Nombre</label>
+            <input type="text" formControlName="nombre" class="form-control" [class.is-invalid]="isInvalid('nombre')">
+            <div class="invalid-feedback">{{ getErrorMessage('nombre') }}</div>
+          </div>
+
+          <div class="col-md-6">
+            <label class="form-label fw-bold small text-secondary">Apellidos</label>
+            <input type="text" formControlName="apellidos" class="form-control" [class.is-invalid]="isInvalid('apellidos')">
+            <div class="invalid-feedback">{{ getErrorMessage('apellidos') }}</div>
+          </div>
+
+          <div class="col-md-6">
+            <label class="form-label fw-bold small text-secondary">Fecha de Nacimiento</label>
+            <input type="date" formControlName="fecha_nacimiento" class="form-control" [class.is-invalid]="isInvalid('fecha_nacimiento')">
+            <div class="invalid-feedback">{{ getErrorMessage('fecha_nacimiento') }}</div>
+          </div>
+
+          <div class="col-md-6">
+            <label class="form-label fw-bold small text-secondary">Teléfono</label>
+            <input type="text" formControlName="telefono" class="form-control" [class.is-invalid]="isInvalid('telefono')">
+            <div class="invalid-feedback">{{ getErrorMessage('telefono') }}</div>
+          </div>
+
+          <div class="col-12">
+            <label class="form-label fw-bold small text-secondary">Email</label>
+            <input type="email" formControlName="email" class="form-control" [class.is-invalid]="isInvalid('email')">
+            <div class="invalid-feedback">{{ getErrorMessage('email') }}</div>
+          </div>
+
+          <div class="col-12 mb-2">
+            <label class="form-label fw-bold small text-secondary">Dirección</label>
+            <input type="text" formControlName="direccion" class="form-control" [class.is-invalid]="isInvalid('direccion')">
+            <div class="invalid-feedback">{{ getErrorMessage('direccion') }}</div>
+          </div>
+
+          <div class="col-12 mt-4 d-flex gap-3">
+            <button type="button" class="btn btn-outline-secondary w-100 fw-bold py-2" (click)="cerrar()">
+              CANCELAR
+            </button>
+            <button type="submit" class="btn btn-primary w-100 fw-bold py-2">
+              {{ cliente ? 'GUARDAR CAMBIOS' : 'REGISTRAR CLIENTE' }}
+            </button>
+          </div>
+        </div>
+      </form>
+
+    </div>
+  </div>
+</div>

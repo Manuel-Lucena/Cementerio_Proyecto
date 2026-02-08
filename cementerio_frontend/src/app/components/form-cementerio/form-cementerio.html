@@ -1,0 +1,53 @@
+<form [formGroup]="cementerioForm" (ngSubmit)="guardar()" class="needs-validation">
+  
+  <div class="mb-3">
+    <label class="form-label fw-bold small text-uppercase">Nombre del Cementerio</label>
+    <input type="text" formControlName="nombre" class="form-control shadow-sm" 
+           [class.is-invalid]="isInvalid('nombre')" placeholder="Ej: San José">
+    <div class="invalid-feedback">El nombre es obligatorio.</div>
+  </div>
+
+  <div class="row g-3 mb-3">
+    <div class="col-md-6">
+      <label class="form-label fw-bold small text-uppercase">Provincia</label>
+      <select formControlName="id_provincia" class="form-select shadow-sm" 
+              [class.is-invalid]="isInvalid('id_provincia')" (change)="onProvinciaChange()">
+        <option [ngValue]="null" disabled>Selecciona...</option>
+        <option *ngFor="let p of provincias" [value]="p.id">{{ p.nombre }}</option>
+      </select>
+      <div class="invalid-feedback">Debe seleccionar una provincia.</div>
+    </div>
+
+    <div class="col-md-6">
+      <label class="form-label fw-bold small text-uppercase">Localidad</label>
+      <select formControlName="id_localidad" class="form-select shadow-sm" 
+              [class.is-invalid]="isInvalid('id_localidad')">
+        <option [ngValue]="null" disabled>Selecciona...</option>
+        <option *ngFor="let l of localidades" [value]="l.id">{{ l.nombre }}</option>
+      </select>
+      <div class="invalid-feedback">La localidad es obligatoria.</div>
+    </div>
+  </div>
+
+  <div class="mb-3">
+    <label class="form-label fw-bold small text-uppercase">Dirección</label>
+    <input type="text" formControlName="direccion" class="form-control shadow-sm" 
+           [class.is-invalid]="isInvalid('direccion')" placeholder="Calle, número...">
+    <div class="invalid-feedback">La dirección es obligatoria</div>
+  </div>
+
+  <div class="mb-3">
+    <label class="form-label fw-bold small text-uppercase">Imagen del Plano (JPG/PNG)</label>
+    <input type="file" class="form-control shadow-sm" (change)="onFileSelected($event)" accept="image/*">
+    <small class="text-muted" *ngIf="editando">Deja en blanco para mantener la imagen actual.</small>
+  </div>
+
+  <div class="d-flex gap-2 mt-4">
+    <button type="button" class="btn btn-light border flex-grow-1 py-2 fw-bold" (click)="cancelar()">
+      CANCELAR
+    </button>
+    <button type="submit" class="btn btn-dark flex-grow-1 py-2 fw-bold" [disabled]="cementerioForm.invalid">
+      {{ editando ? 'ACTUALIZAR DATOS' : 'GUARDAR CEMENTERIO' }}
+    </button>
+  </div>
+</form>

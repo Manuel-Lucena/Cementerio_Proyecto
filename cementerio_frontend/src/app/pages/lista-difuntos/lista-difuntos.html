@@ -1,0 +1,49 @@
+<app-navbar></app-navbar>
+
+<div class="container my-5 min-vh-100">
+  <div class="text-center mb-5">
+    <h1 class="fw-bold border-bottom border-3 d-inline-block pb-2 color-principal-texto">Mis Difuntos</h1>
+  </div>
+
+  <div *ngIf="cargando" class="d-flex justify-content-center my-5">
+    <div class="spinner-border color-principal-texto" role="status"></div>
+  </div>
+
+  <div class="row g-4" *ngIf="!cargando && misDifuntos.length > 0">
+    <div class="col-md-6 col-lg-4" *ngFor="let difunto of misDifuntos">
+      <div class="card h-100 shadow-sm border-0 card-hover">
+        <div class="card-header bg-principal text-white text-center py-3">
+          <h5 class="mb-0">{{ difunto.nombre }} {{ difunto.apellidos }}</h5>
+        </div>
+        
+        <div class="card-body">
+          <p class="mb-2"><i class="bi bi-geo-alt-fill color-principal-texto me-2"></i> <strong>Ubicación:</strong> {{ difunto.ubicacion }}</p>
+          <p class="mb-1"><i class="bi bi-house-door-fill color-principal-texto me-2"></i> <strong>{{ difunto.nombreCementerio }}</strong></p>
+          <p class="mb-3 small text-muted ms-4">{{ difunto.localidad }}, {{ difunto.provincia }}</p>
+          <p class="mb-0"><i class="bi bi-calendar-event color-principal-texto me-2"></i> <strong>Fecha:</strong> {{ difunto.fechaFallecimiento | date:'dd/MM/yyyy' }}</p>
+        </div>
+
+        <div class="card-footer bg-white border-0 pb-3">
+          <button class="btn btn-principal w-100 rounded-pill shadow-sm" (click)="irAContratar(difunto)">
+            VER SERVICIOS
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<app-footer></app-footer>
+
+<div class="modal-backdrop fade show" *ngIf="mostrarModal"></div>
+<div class="modal d-block" tabindex="-1" *ngIf="mostrarModal">
+  <div class="modal-dialog modal-dialog-centered modal-lg">
+    <div class="modal-content border-0 shadow-lg">
+      <app-form-contratar-servicios 
+        [difunto]="difuntoSeleccionado"
+        (onCancelar)="mostrarModal = false"
+        (onConfirmar)="procesarContratacion($event)">
+      </app-form-contratar-servicios>
+    </div>
+  </div>
+</div>

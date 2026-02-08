@@ -1,0 +1,74 @@
+<div class="modal-backdrop-custom">
+  <div class="modal-content-custom shadow-lg">
+    <form [formGroup]="concesionForm" (ngSubmit)="guardar()">
+      <div class="modal-header-custom bg-success text-white p-3 d-flex justify-content-between align-items-center">
+        <h5 class="m-0 fw-bold">
+          NUEVA CONCESIÓN: {{ sepultura?.codigoVisual }}
+        </h5>
+        <button type="button" class="btn-close btn-close-white" (click)="cerrar()"></button>
+      </div>
+
+      <div class="p-4">
+        <h6 class="fw-bold text-success mb-3 border-bottom pb-2">Datos del Difunto</h6>
+        <div formGroupName="difunto" class="row g-3 mb-4">
+          <div class="col-6">
+            <label class="form-label small fw-bold">Nombre</label>
+            <input type="text" class="form-control" formControlName="nombre"
+                   [class.is-invalid]="concesionForm.get('difunto.nombre')?.touched && concesionForm.get('difunto.nombre')?.invalid">
+            <div class="invalid-feedback">El nombre es obligatorio.</div>
+          </div>
+          
+          <div class="col-6">
+            <label class="form-label small fw-bold">Apellidos</label>
+            <input type="text" class="form-control" formControlName="apellidos"
+                   [class.is-invalid]="concesionForm.get('difunto.apellidos')?.touched && concesionForm.get('difunto.apellidos')?.invalid">
+            <div class="invalid-feedback">Los apellidos son obligatorios.</div>
+          </div>
+
+          <div class="col-6">
+            <label class="form-label small fw-bold">Fallecimiento</label>
+            <input type="date" class="form-control" formControlName="fechaFallecimiento"
+                   [class.is-invalid]="concesionForm.get('difunto.fechaFallecimiento')?.touched && (concesionForm.get('difunto.fechaFallecimiento')?.invalid || errorFechasDifunto)">
+          </div>
+
+          <div class="col-6">
+            <label class="form-label small fw-bold">Ingreso</label>
+            <input type="date" class="form-control" formControlName="fechaIngreso"
+                   [class.is-invalid]="concesionForm.get('difunto.fechaIngreso')?.touched && (concesionForm.get('difunto.fechaIngreso')?.invalid || errorFechasDifunto)">
+          </div>
+
+          <div class="col-12 mt-1" *ngIf="errorFechasDifunto">
+            <small class="text-danger fw-bold">La fecha de fallecimiento no puede ser posterior a la de ingreso.</small>
+          </div>
+        </div>
+
+        <h6 class="fw-bold text-muted mb-3 border-bottom pb-2">Datos de la Concesión</h6>
+        <div class="row g-3 mb-4">
+          <div class="col-6">
+            <label class="form-label small fw-bold">Fecha Inicio</label>
+            <input type="date" class="form-control bg-light" formControlName="fechaInicio" readonly>
+          </div>
+          <div class="col-6">
+            <label class="form-label small fw-bold">Vencimiento</label>
+            <input type="date" class="form-control" formControlName="fechaFin"
+                   [class.is-invalid]="concesionForm.get('fechaFin')?.touched && concesionForm.get('fechaFin')?.invalid">
+            <div class="invalid-feedback">Debe indicar una fecha de vencimiento.</div>
+          </div>
+        </div>
+
+        <div class="row g-3 mt-2">
+          <div class="col-6">
+            <button type="button" class="btn btn-light border w-100 py-2 fw-bold" (click)="cerrar()">
+              CANCELAR
+            </button>
+          </div>
+          <div class="col-6">
+            <button type="submit" class="btn btn-success w-100 py-2 fw-bold" [disabled]="concesionForm.invalid || cargando">
+              {{ cargando ? 'PROCESANDO...' : 'CONFIRMAR' }}
+            </button>
+          </div>
+        </div>
+      </div>
+    </form>
+  </div>
+</div>

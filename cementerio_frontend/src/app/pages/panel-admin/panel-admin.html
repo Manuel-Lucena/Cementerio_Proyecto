@@ -1,0 +1,216 @@
+<app-navbar></app-navbar>
+
+<div class="container-fluid g-0">
+  <div class="row g-0">
+    <nav class="col-md-3 col-lg-2 bg-dark min-vh-100 shadow-sm">
+      <div class="p-4 text-white text-center text-md-start border-bottom border-secondary mb-3">
+        <h5 class="fw-bold mb-0 text-uppercase">
+          <i class="bi bi-gear-fill me-2"></i>Admin
+        </h5>
+      </div>
+      <div class="list-group list-group-flush px-2">
+        <button (click)="cambiarVista('stats')"
+          class="list-group-item list-group-item-action bg-dark text-white border-0 rounded mb-1 py-3"
+          [class.active]="vistaActual === 'stats'">
+          <i class="bi bi-speedometer2 me-2"></i> Estadísticas
+        </button>
+        <button (click)="cambiarVista('clientes')"
+          class="list-group-item list-group-item-action bg-dark text-white border-0 rounded mb-1 py-3"
+          [class.active]="vistaActual === 'clientes' || vistaActual === 'concesiones'">
+          <i class="bi bi-people-fill me-2"></i> Clientes
+        </button>
+        <button (click)="cambiarVista('empresas')"
+          class="list-group-item list-group-item-action bg-dark text-white border-0 rounded py-3"
+          [class.active]="vistaActual === 'empresas'">
+          <i class="bi bi-building-fill me-2"></i> Empresas
+        </button>
+      </div>
+    </nav>
+
+    <main class="col-md-9 col-lg-10 bg-light p-4">
+      <div class="d-flex flex-column flex-md-row justify-content-between align-items-md-center mb-4 gap-3">
+        <h2 class="h4 fw-bold mb-0">
+          <ng-container [ngSwitch]="vistaActual">
+            <span *ngSwitchCase="'stats'">Análisis del Sistema</span>
+            <span *ngSwitchCase="'clientes'">Gestión de Clientes</span>
+            <span *ngSwitchCase="'empresas'">Gestión de Empresas</span>
+            <span *ngSwitchCase="'concesiones'">Contratos de {{ clienteSeleccionadoParaConcesiones?.nombre }}</span>
+          </ng-container>
+        </h2>
+
+        <div class="d-flex align-items-center gap-3" *ngIf="vistaActual === 'clientes' || vistaActual === 'empresas'">
+          <button *ngIf="vistaActual === 'clientes'" class="btn btn-dark fw-bold shadow-sm px-4"
+            (click)="nuevoCliente()">
+            <i class="bi bi-person-plus-fill me-2"></i> Nuevo Cliente
+          </button>
+          <button *ngIf="vistaActual === 'empresas'" class="btn btn-dark fw-bold shadow-sm px-4"
+            (click)="nuevaEmpresa()">
+            <i class="bi bi-building-plus me-2"></i> Nueva Empresa
+          </button>
+          <div class="input-group shadow-sm">
+            <span class="input-group-text bg-white border-end-0"><i class="bi bi-search"></i></span>
+            <input type="text" class="form-control border-start-0" [(ngModel)]="filtro"
+              [placeholder]="vistaActual === 'clientes' ? 'Buscar cliente...' : 'Buscar empresa...'">
+          </div>
+        </div>
+      </div>
+
+      <div *ngIf="vistaActual === 'stats'">
+        <div class="row g-4 mb-4">
+          <div class="col-md-4">
+            <div class="card border-0 shadow-sm p-4 border-start border-success border-4 h-100">
+              <small class="text-muted fw-bold text-uppercase">Ingresos Totales</small>
+              <h2 class="fw-bold mt-2 mb-0 text-success">{{ datosResumen?.ingresosTotales | currency:'EUR' }}</h2>
+            </div>
+          </div>
+          <div class="col-md-4">
+            <div class="card border-0 shadow-sm p-4 border-start border-primary border-4 h-100">
+              <small class="text-muted fw-bold text-uppercase">Concesiones Activas</small>
+              <h2 class="fw-bold mt-2 mb-0 text-primary">{{ datosResumen?.concesionesActivas || 0 }}</h2>
+            </div>
+          </div>
+          <div class="col-md-4">
+            <div class="card border-0 shadow-sm p-4 border-start border-danger border-4 h-100">
+              <small class="text-muted fw-bold text-uppercase">Concesiones Vencidas</small>
+              <h2 class="fw-bold mt-2 mb-0 text-danger">{{ datosResumen?.concesionesVencidas || 0 }}</h2>
+            </div>
+          </div>
+        </div>
+        <div class="card border-0 shadow-sm p-4 bg-white">
+          <h6 class="fw-bold text-muted mb-4 text-uppercase small">Estado de las Concesiones</h6>
+          <div class="chart-container">
+            <canvas baseChart [data]="barChartData" [options]="barChartOptions" [type]="barChartType"></canvas>
+          </div>
+        </div>
+      </div>
+
+      <div class="card shadow-sm border-0" *ngIf="vistaActual === 'concesiones'">
+        <div class="p-3 bg-white border-bottom">
+          <button class="btn btn-sm btn-outline-secondary fw-bold" (click)="cambiarVista('clientes')">
+            <i class="bi bi-arrow-left me-2"></i> Volver a Clientes
+          </button>
+        </div>
+        <div class="table-responsive">
+          <table class="table table-hover align-middle mb-0">
+            <thead class="table-light text-uppercase small fw-bold">
+              <tr>
+                <th class="ps-3">Código Sepultura</th>
+                <th>Cementerio / Servicio</th>
+                <th>Vigencia</th>
+                <th class="text-center">Estado</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let con of concesiones">
+                <td class="ps-3 fw-bold text-primary">{{ con.codigoSepultura }}</td>
+                <td>
+                  <div class="fw-bold">{{ con.nombreCementerio }}</div>
+                  <div class="text-muted small">{{ con.tipoServicio }}</div>
+                </td>
+                <td class="small">
+                  <div>{{ con.fechaInicio | date:'dd/MM/yyyy' }}</div>
+                  <div class="text-muted">{{ con.fechaFin | date:'dd/MM/yyyy' }}</div>
+                </td>
+                <td class="text-center">
+                  <span class="badge rounded-pill"
+                    [ngClass]="con.activa ? 'bg-success-subtle text-success border border-success' : 'bg-danger-subtle text-danger border border-danger'">
+                    {{ con.activa ? 'Activa' : 'Vencida' }}
+                  </span>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <div class="card shadow-sm border-0" *ngIf="vistaActual === 'clientes' || vistaActual === 'empresas'">
+        <div class="table-responsive">
+          <table class="table table-hover align-middle mb-0">
+            <thead class="table-light text-uppercase small fw-bold">
+              <tr *ngIf="vistaActual === 'clientes'">
+                <th class="ps-3">Nombre</th>
+                <th>Contacto</th>
+                <th>Dirección</th>
+                <th class="text-center">Acciones</th>
+              </tr>
+              <tr *ngIf="vistaActual === 'empresas'">
+                <th class="ps-3">Empresa</th>
+                <th>Email / Teléfono</th>
+                <th class="text-center">Acciones</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngIf="cargando">
+                <td colspan="5" class="text-center py-5">
+                  <div class="spinner-border text-dark"></div>
+                </td>
+              </tr>
+
+              <ng-container *ngIf="!cargando && vistaActual === 'clientes'">
+                <tr *ngFor="let c of clientesFiltrados">
+                  <td class="ps-3 fw-bold">{{ c.nombre }} {{ c.apellidos }}</td>
+                  <td>
+                    <div class="small">{{ c.email }}</div>
+                    <div class="small text-muted">{{ c.telefono }}</div>
+                  </td>
+                  <td class="small text-truncate">{{ c.direccion || '---' }}</td>
+                  <td class="text-center">
+                    <div class="btn-group">
+                      <button class="btn btn-sm btn-outline-info" (click)="verConcesiones(c)" title="Ver Contratos"><i
+                          class="bi bi-file-text"></i></button>
+                      <button class="btn btn-sm btn-outline-primary" (click)="editar(c)"><i
+                          class="bi bi-pencil"></i></button>
+                      <button class="btn btn-sm btn-outline-danger" (click)="abrirModalEliminar(c)"><i
+                          class="bi bi-trash"></i></button>
+                    </div>
+                  </td>
+                </tr>
+              </ng-container>
+
+              <ng-container *ngIf="!cargando && vistaActual === 'empresas'">
+                <tr *ngFor="let e of empresasFiltradas">
+                  <td class="ps-3 fw-bold">{{ e.nombre }}</td>
+                  <td>
+                    <div class="small">{{ e.email }}</div>
+                    <div class="small text-muted">{{ e.telefono }}</div>
+                  </td>
+                  <td class="text-center">
+                    <div class="btn-group">
+                      <button class="btn btn-sm btn-outline-primary" (click)="editarEmpresa(e)"><i
+                          class="bi bi-pencil"></i></button>
+                      <button class="btn btn-sm btn-outline-danger" (click)="abrirModalEliminar(e)"><i
+                          class="bi bi-trash"></i></button>
+                    </div>
+                  </td>
+                </tr>
+              </ng-container>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </main>
+  </div>
+</div>
+
+<app-footer></app-footer>
+
+<app-modal-confirmacion *ngIf="mostrarModalBorrar" [titulo]="'Eliminar'" [mensaje]="'¿Borrar permanentemente?'"
+  (confirmado)="confirmarEliminar()" (cancelado)="mostrarModalBorrar = false"></app-modal-confirmacion>
+  <app-modal-editar-cliente *ngIf="mostrarModalEditar" [cliente]="clienteSeleccionado"
+    (guardado)="confirmarGuardar($event)" (cancelado)="mostrarModalEditar = false"></app-modal-editar-cliente>
+
+  <div class="modal-backdrop-custom" *ngIf="mostrarModalEmpresa">
+    <div class="modal-content-custom shadow-lg">
+      <div class="bg-dark text-white p-3 d-flex justify-content-between align-items-center rounded-top">
+        <h5 class="m-0 fw-bold">{{ empresaSeleccionada ? 'Actualizar Empresa' : 'Nueva Empresa' }}</h5>
+        <button class="btn btn-sm btn-outline-light border-0" (click)="mostrarModalEmpresa = false"><i
+            class="bi bi-x-lg"></i></button>
+      </div>
+      <div class="p-4 bg-white rounded-bottom">
+        <app-form-empresa [empresaAEditar]="empresaSeleccionada" (empresaCreada)="finalizarGuardadoEmpresa()"
+          (alCancelar)="mostrarModalEmpresa = false"></app-form-empresa>
+      </div>
+    </div>
+  </div>
+
+  <app-mensajes-modal></app-mensajes-modal>

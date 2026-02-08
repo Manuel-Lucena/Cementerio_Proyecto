@@ -1,0 +1,21 @@
+@use '../../../styles/_variables' as v;
+
+.color-principal-texto { color: v.$color-principal; }
+.bg-principal { background-color: v.$color-principal; }
+
+.btn-principal {
+  background-color: v.$color-principal;
+  color: white;
+  border: none;
+  &:hover { background-color: darken(v.$color-principal, 5%); color: white; }
+  &:disabled { background-color: v.$color-secundario; opacity: 0.6; }
+}
+
+.form-check-input:checked {
+  background-color: v.$color-principal;
+  border-color: v.$color-principal;
+}
+
+tr:hover {
+  background-color: rgba(v.$color-principal, 0.05) ;
+}

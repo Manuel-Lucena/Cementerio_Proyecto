@@ -1,0 +1,67 @@
+<div class="modal-backdrop-custom">
+  <div class="modal-content-custom shadow-lg">
+    <div class="modal-header-custom p-3 d-flex justify-content-between align-items-center">
+      <h5 class="m-0 fw-bold"><i class="bi bi-gear-fill me-2"></i>GESTIÓN DE SERVICIOS</h5>
+      <button class="btn-close-custom" (click)="cerrar()">&times;</button>
+    </div>
+
+    <div class="p-4">
+      <div class="row g-4">
+        <div class="col-md-6">
+          <div class="card h-100 border-0 bg-light">
+            <div class="card-body">
+              <h6 class="titulo-columna mb-3 border-bottom pb-2">CATÁLOGO GENERAL</h6>
+              <div class="lista-contenedor">
+                <div *ngFor="let s of serviciosGlobales" class="d-flex align-items-center p-2 border-bottom hover-row">
+                  <input type="checkbox" [checked]="estaAsignado(s.id)" (change)="toggleServicio(s)"
+                    class="form-check-input me-3">
+                  <div>
+                    <span class="fw-bold d-block small">{{ s.nombre }}</span>
+                    <small class="text-muted">{{ s.descripcion }}</small>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="col-md-6">
+          <div class="card h-100 border-0 bg-white border shadow-sm">
+            <div class="card-body">
+              <h6 class="titulo-columna mb-3 border-bottom pb-2">COSTES ASIGNADOS</h6>
+              <div class="lista-contenedor">
+                <div *ngFor="let asig of serviciosAsignados; let i = index" class="mb-3">
+                  <div class="d-flex align-items-center p-2 border-bottom">
+                    <span class="flex-grow-1 fw-bold small">{{ asig.nombreServicio }}</span>
+                    <div class="input-group input-group-sm w-50">
+                      <input type="number" [(ngModel)]="asig.coste" class="form-control text-end"
+                        [class.is-invalid]="asig.coste === null || asig.coste < 0" placeholder="0.00">
+                      <span class="input-group-text">€</span>
+                    </div>
+                  </div>
+                  <div *ngIf="asig.coste === null" class="text-danger text-end">
+                    El coste es obligatorio
+                  </div>
+                  <div *ngIf="asig.coste !== null && asig.coste < 0" class="text-danger text-end">
+                    No puede ser negativo
+                  </div>
+                </div>
+
+                <div *ngIf="serviciosAsignados.length === 0" class="text-center mt-5 text-muted small">
+                  Seleccione servicios del catálogo
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="p-3 border-top d-flex justify-content-end gap-2 bg-light">
+      <button class="btn-cancelar" (click)="cerrar()">CANCELAR</button>
+      <button class="btn-guardar" [disabled]="!formularioValido || cargando" (click)="guardar()">
+        {{ cargando ? 'GUARDANDO...' : 'GUARDAR CAMBIOS' }}
+      </button>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,69 @@
+<form [formGroup]="formAgrupacion" (ngSubmit)="guardar()" class="p-2">
+  <fieldset class="mb-4">
+    <legend class="text-primary small fw-bold text-uppercase border-bottom pb-2 mb-3">
+      1. Identificación del Sector
+    </legend>
+    <div class="row g-3">
+      <div class="col-md-8">
+        <label class="form-label small fw-bold text-secondary">Nombre del Sector</label>
+        <input type="text" class="form-control" formControlName="nombre" placeholder="Ej: Bloque A"
+          [class.is-invalid]="isInvalid('nombre')">
+        <div class="invalid-feedback">{{ getErrorMessage('nombre') }}</div>
+      </div>
+      <div class="col-md-4">
+        <label class="form-label small fw-bold text-secondary">Forma</label>
+        <select class="form-select" formControlName="tipo_forma">
+          <option value="polygon">Polígono</option>
+          <option value="rect">Rectángulo</option>
+          <option value="circle">Círculo</option>
+        </select>
+      </div>
+    </div>
+  </fieldset>
+
+  <fieldset class="mb-4">
+    <legend class="text-primary small fw-bold text-uppercase border-bottom pb-2 mb-3">
+      2. Capacidad (Nichos)
+    </legend>
+    <div class="row g-3">
+      <div class="col-md-6">
+        <label class="form-label small fw-bold text-secondary">Número de Filas</label>
+        <input type="number" class="form-control" formControlName="filas" [class.is-invalid]="isInvalid('filas')">
+        <div class="invalid-feedback">{{ getErrorMessage('filas') }}</div>
+      </div>
+      <div class="col-md-6">
+        <label class="form-label small fw-bold text-secondary">Número de Columnas</label>
+        <input type="number" class="form-control" formControlName="columnas" [class.is-invalid]="isInvalid('columnas')">
+        <div class="invalid-feedback">{{ getErrorMessage('columnas') }}</div>
+      </div>
+    </div>
+  </fieldset>
+
+  <fieldset class="mb-4">
+    <legend class="text-primary small fw-bold text-uppercase border-bottom pb-2 mb-3">
+      3. Posicionamiento (Giro)
+    </legend>
+    <div class="mb-2">
+      <label class="form-label small fw-bold text-secondary text-uppercase">Coordenadas SVG</label>
+      
+      <input type="text" class="form-control bg-light" formControlName="coordenadas_mapa"
+        [placeholder]="formAgrupacion.get('tipo_forma')?.value === 'polygon' ? 'x1,y1 x2,y2 x3,y3 x4,y4 (Para girar)' : 
+                       formAgrupacion.get('tipo_forma')?.value === 'rect' ? 'x,y,ancho,alto' : 'cx,cy,radio'"
+        [class.is-invalid]="isInvalid('coordenadas_mapa')">
+
+
+      <div class="invalid-feedback">
+        {{ getErrorMessage('coordenadas_mapa') }}
+      </div>
+    </div>
+  </fieldset>
+
+  <div class="d-flex justify-content-center gap-3 mt-4 pt-4 border-top">
+    <button type="button" class="btn btn-outline-secondary px-5 fw-bold" (click)="onCancelar()">
+      CANCELAR
+    </button>
+    <button type="submit" class="btn btn-dark px-5 fw-bold" [disabled]="formAgrupacion.invalid">
+      {{ agrupacionAEditar ? 'GUARDAR CAMBIOS' : 'CREAR SECTOR' }}
+    </button>
+  </div>
+</form>

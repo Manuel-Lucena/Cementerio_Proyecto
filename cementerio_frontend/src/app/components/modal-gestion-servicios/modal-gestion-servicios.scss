@@ -1,0 +1,68 @@
+@use '../../../styles/_variables' as v;
+@use '../../../styles/_mixins' as m;
+
+@include m.modal-angular-basico;
+
+
+.modal-content-custom {
+    max-width: 950px;
+    border: 1px solid v.$color-secundario;
+}
+
+
+.modal-header-custom {
+    background-color: v.$color-fondo-oscuro;
+    color: v.$color-texto-claro;
+    border-bottom: 2px solid v.$color-principal;
+}
+
+
+.aviso-servicio {
+    background-color: rgba(v.$color-principal, 0.1);
+    border: 1px solid v.$color-principal;
+    color: v.$color-texto-oscuro;
+}
+
+
+.titulo-columna {
+    color: v.$color-principal;
+    font-weight: bold;
+    text-transform: uppercase;
+    font-size: 0.9rem;
+}
+
+
+.lista-contenedor {
+    height: 350px;
+    overflow-y: auto;
+    background-color: v.$color-fondo-claro;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+}
+
+
+.btn-guardar {
+    @include m.boton-base;
+    background-color: v.$color-principal;
+    color: white;
+    border: none;
+    font-size: 0.85rem;
+
+    &:hover {
+        background-color: darken(v.$color-principal, 10%);
+        transform: translateY(-1px);
+    }
+}
+
+.btn-cancelar {
+    @include m.boton-base;
+    background-color: transparent;
+    color: v.$color-secundario;
+    border: 1px solid v.$color-secundario;
+    font-size: 0.85rem;
+
+    &:hover {
+        background-color: v.$color-fondo-claro;
+        color: v.$color-texto-oscuro;
+    }
+}

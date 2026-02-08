@@ -1,0 +1,104 @@
+<app-navbar></app-navbar>
+
+<div class="vista-gestion">
+  <main class="container py-5">
+    <header class="text-center mb-5">
+      <h1 class="fw-bold">Nuestras Empresas</h1>
+      <div class="divisor"></div>
+
+      <div class="filtros-container mx-auto mt-4">
+        <div class="row g-3 justify-content-center align-items-center">
+
+          <div class="col-12 col-md-8 col-lg-6">
+            <div class="input-group shadow-sm">
+              <span class="input-group-text bg-white border-end-0 text-muted"><i class="bi bi-search"></i></span>
+              <input type="text" class="form-control border-start-0" placeholder="Buscar empresa por nombre..."
+                [(ngModel)]="filtroNombre" (input)="aplicarFiltros()">
+            </div>
+          </div>
+
+          <div class="col-12 col-md-auto" *ngIf="auth.esAdmin()">
+            <button class="btn btn-dark px-4 shadow-sm" (click)="abrirModal()">
+              <i class="bi bi-plus-lg me-2"></i> Nueva Empresa
+            </button>
+          </div>
+
+        </div>
+      </div>
+    </header>
+
+    <section class="row g-4 justify-content-center" *ngIf="listaFiltrada.length; else noResultados">
+      <article class="col-12 col-md-6 col-lg-4 d-flex" *ngFor="let empresa of listaFiltrada">
+        <div class="tarjeta-gestion position-relative h-100 w-100">
+
+          <div class="dropdown position-absolute top-0 end-0 m-3" *ngIf="auth.esAdmin()">
+            <button class="btn btn-link text-dark shadow-none p-0" type="button" data-bs-toggle="dropdown">
+              <i class="bi bi-three-dots-vertical fs-4"></i>
+            </button>
+            <ul class="dropdown-menu dropdown-menu-end shadow border-0">
+              <li><button class="dropdown-item py-2" (click)="prepararEdicion(empresa)">
+                <i class="bi bi-pencil-square me-2 text-primary"></i> Editar</button>
+              </li>
+              <li><hr class="dropdown-divider"></li>
+              <li><button class="dropdown-item py-2 text-danger" (click)="abrirModalEliminar($event, empresa)">
+                <i class="bi bi-trash3-fill me-2"></i> Eliminar</button>
+              </li>
+            </ul>
+          </div>
+
+          <div class="contenido flex-grow-1">
+            <div class="titulo-contenedor pe-4">
+              <div class="logo-izquierda">
+                <img [src]="empresa.imagen ? 'logos/' + empresa.imagen : 'logos/default.jpg'" class="img-logo-pequeno"
+                  #imgRef (error)="imgRef.src = 'logos/default.jpg'">
+              </div>
+              <div class="texto-titulo">
+                <i class="bi bi-building"></i>
+                <h2>{{ empresa.nombre }}</h2>
+              </div>
+            </div>
+            <ul class="info-lista">
+              <li><i class="bi bi-geo-alt"></i> {{ empresa.direccion }}</li>
+              <li><i class="bi bi-telephone"></i> {{ empresa.telefono }}</li>
+              <li><i class="bi bi-envelope"></i> {{ empresa.email }}</li>
+            </ul>
+          </div>
+
+          <button class="btn-accion mt-auto" (click)="verCementerios(empresa.id)">
+            Ver cementerios <i class="bi bi-arrow-right-short"></i>
+          </button>
+        </div>
+      </article>
+    </section>
+
+    <ng-template #noResultados>
+      <div class="text-center py-5">
+        <i class="bi bi-building-exclamation fs-1 text-muted"></i>
+        <p class="mt-3 text-muted">No se han encontrado empresas.</p>
+      </div>
+    </ng-template>
+  </main>
+</div>
+
+<div class="modal-backdrop-custom" *ngIf="mostrarModal && auth.esAdmin()">
+  <div class="modal-content-custom shadow-lg">
+    <div class="modal-header-custom bg-dark text-white p-3 d-flex justify-content-between align-items-center">
+      <h5 class="m-0 fw-bold text-uppercase">
+        <i class="bi bi-building-gear me-2"></i> {{ empresaSeleccionada ? 'Editar Empresa' : 'Registro de Empresa' }}
+      </h5>
+      <button class="btn-close-custom" (click)="cerrarModal()">&times;</button>
+    </div>
+    <div class="p-4">
+      <app-form-empresa [empresaAEditar]="empresaSeleccionada" (empresaCreada)="finalizarGuardado()"
+        (alCancelar)="cerrarModal()"></app-form-empresa>
+    </div>
+  </div>
+</div>
+
+<app-modal-confirmacion *ngIf="mostrarModalEliminar && auth.esAdmin()"
+  [mensaje]="'¿Seguro que deseas eliminar la empresa ' + nombreEmpresaAEliminar + '?'"
+  (confirmado)="confirmarEliminacion()" (cancelado)="mostrarModalEliminar = false">
+</app-modal-confirmacion>
+
+<app-mensajes-modal></app-mensajes-modal>
+<app-footer></app-footer>

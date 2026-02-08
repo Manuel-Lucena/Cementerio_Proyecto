@@ -1,0 +1,24 @@
+@use '../../../styles/_variables' as v;
+
+
+.bg-principal { background-color: v.$color-fondo-oscuro; }
+.color-principal-texto { color: v.$color-principal; }
+
+
+.btn-principal {
+    background-color: v.$color-principal;
+    color: v.$color-texto-claro;
+    &:hover {
+        filter: brightness(1.1);
+        color: white;
+    }
+}
+
+
+.card-hover {
+    transition: transform 0.2s;
+    &:hover { transform: translateY(-5px); }
+}
+
+
+.border-principal { border-color: v.$color-principal; }

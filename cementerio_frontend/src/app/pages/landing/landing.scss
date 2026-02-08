@@ -1,0 +1,86 @@
+@use '../../../styles/_variables' as v;
+
+.hero {
+  background-color: v.$color-fondo-claro;
+  min-height: 80vh;
+  
+  h1 {
+    color: v.$color-principal;
+  }
+}
+
+#servicios {
+  background-color: white;
+  
+  h2 {
+    color: v.$color-texto-oscuro;
+  }
+
+  img {
+    width: 100%;
+    height: 220px;
+    object-fit: cover;
+  }
+}
+
+
+.btn-primary {
+  background-color: v.$color-principal;
+  border-color: v.$color-principal;
+  &:hover {
+    background-color: darken(v.$color-principal, 10%);
+  }
+}
+
+.btn-outline-primary {
+  color: v.$color-principal;
+  border-color: v.$color-principal;
+  &:hover {
+    background-color: v.$color-principal;
+    color: white;
+  }
+}
+
+@keyframes entradaSuave {
+  from { 
+    opacity: 0; 
+    transform: translateY(30px); 
+  }
+  to { 
+    opacity: 1; 
+    transform: translateY(0); 
+  }
+}
+
+.animacion-entrada {
+  animation: entradaSuave 1s ease-out forwards;
+}
+
+.animacion-retraso {
+  animation: entradaSuave 1s ease-out 0.4s forwards;
+  opacity: 0; 
+}
+
+
+.tarjeta-interactiva {
+  transition: transform 0.4s cubic-bezier(0.165, 0.84, 0.44, 1);
+  border-bottom: 4px solid transparent; 
+  
+  &:hover {
+    transform: scale(1.03) translateY(-10px);
+    box-shadow: 0 15px 30px rgba(0,0,0,0.1);
+    border-bottom: 4px solid v.$color-principal;
+  }
+}
+
+
+.linea-svg {
+  stroke: v.$color-principal;
+}
+
+video {
+  display: block;
+  background: v.$color-texto-oscuro;
+  aspect-ratio: 16 / 9;
+  border-radius: 8px;
+}

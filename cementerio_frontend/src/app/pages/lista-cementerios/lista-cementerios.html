@@ -1,0 +1,123 @@
+<app-navbar></app-navbar>
+
+<div class="vista-cementerios">
+  <main class="container py-5">
+    
+    <header class="text-center mb-4">
+      <h1 class="fw-bold">{{ idEmpresa ? 'Cementerios de la Empresa' : 'Todos los Cementerios' }}</h1>
+      <div class="divisor"></div>
+    </header>
+
+    <div class="row g-3 mb-5 align-items-end bg-white p-3 rounded shadow-sm border">
+      <div class="col-12 col-md-6 col-lg-3">
+        <label class="small fw-bold mb-1 text-muted"><i class="bi bi-map me-1"></i> Provincia</label>
+        <select class="form-select" [(ngModel)]="filtroProvincia" (change)="onProvinciaChange()">
+          <option [ngValue]="null">Todas las provincias...</option>
+          <option *ngFor="let p of provincias" [ngValue]="p.id">{{ p.nombre }}</option>
+        </select>
+      </div>
+
+      <div class="col-12 col-md-6 col-lg-3">
+        <label class="small fw-bold mb-1 text-muted"><i class="bi bi-geo-alt me-1"></i> Localidad</label>
+        <select class="form-select" [(ngModel)]="filtroLocalidad" [disabled]="!filtroProvincia">
+          <option [ngValue]="null">Todas las localidades...</option>
+          <option *ngFor="let l of localidades" [ngValue]="l.id">{{ l.nombre }}</option>
+        </select>
+      </div>
+
+      <div class="col-12 col-md-8 col-lg-4">
+        <label class="small fw-bold mb-1 text-muted"><i class="bi bi-search me-1"></i> Buscar</label>
+        <div class="input-group">
+          <span class="input-group-text bg-transparent border-end-0"><i class="bi bi-search"></i></span>
+          <input type="text" class="form-control border-start-0" placeholder="Nombre del cementerio..." [(ngModel)]="filtroBusqueda">
+        </div>
+      </div>
+
+      <div class="col-12 col-md-4 col-lg-2 d-flex justify-content-md-end" *ngIf="auth.esAdmin() || auth.esEmpresa()">
+        <button *ngIf="idEmpresa" class="btn btn-dark btn-sm px-4 py-2 fw-bold" (click)="abrirModalNuevo()">
+          <i class="bi bi-plus-lg me-1"></i> Nuevo
+        </button>
+      </div>
+    </div>
+
+    <section class="row g-4 justify-content-center" *ngIf="cementeriosMostrados.length; else noResultados">
+      <article class="col-12 col-md-6 col-lg-4 d-flex" *ngFor="let cementerio of cementeriosMostrados">
+        <div class="tarjeta-gestion text-center d-flex flex-column h-100 w-100 position-relative" (click)="verUnidades(cementerio.id)">
+          
+          <div class="dropdown position-absolute top-0 end-0 m-3" *ngIf="auth.esAdmin() || auth.esEmpresa()">
+            <button class="btn btn-link text-dark shadow-none p-0" type="button" data-bs-toggle="dropdown" (click)="$event.stopPropagation()">
+              <i class="bi bi-three-dots-vertical fs-4"></i>
+            </button>
+            <ul class="dropdown-menu dropdown-menu-end shadow border-0">
+              <li>
+                <button class="dropdown-item py-2" (click)="prepararEdicion($event, cementerio)">
+                  <i class="bi bi-pencil-square me-2 text-primary"></i> Editar
+                </button>
+              </li>
+              
+              <ng-container *ngIf="auth.esAdmin()">
+                <li><hr class="dropdown-divider"></li>
+                <li>
+                  <button class="dropdown-item py-2 text-danger" (click)="abrirModalEliminar($event, cementerio)">
+                    <i class="bi bi-trash3-fill me-2"></i> Eliminar
+                  </button>
+                </li>
+              </ng-container>
+            </ul>
+          </div>
+
+          <div class="contenido-principal flex-grow-1 d-flex flex-column justify-content-center p-4">
+            <small class="text-secondary d-block mb-1 text-uppercase fw-bold letter-spacing-1">
+              {{ cementerio.empresa?.nombre || 'Gestión Privada' }}
+            </small>
+            <h2 class="h5 fw-bold mb-2">{{ cementerio.nombre }}</h2>
+            <hr class="separador-corto mx-auto my-3">
+            <div class="info-direccion d-flex flex-column align-items-center gap-2 text-muted">
+              <div>
+                <i class="bi bi-geo-alt-fill text-primary me-1"></i>
+                <span>{{ cementerio.direccion }}</span>
+              </div>
+              <span *ngIf="cementerio.localidad" class="badge bg-light text-dark border px-3">
+                {{ cementerio.localidad.nombre }}
+              </span>
+            </div>
+          </div>
+
+          <button class="btn-interactivo mt-auto w-100 py-3 fw-bold">Explorar recinto</button>
+        </div>
+      </article>
+    </section>
+
+    <ng-template #noResultados>
+      <div class="text-center py-5 bg-white rounded shadow-sm border">
+        <i class="bi bi-geo-fill fs-1 text-muted"></i>
+        <p class="text-muted mt-3">No hay cementerios que coincidan con los filtros.</p>
+      </div>
+    </ng-template>
+  </main>
+</div>
+
+<div class="modal-backdrop-custom" *ngIf="mostrarModal && (auth.esAdmin() || auth.esEmpresa())">
+  <div class="modal-content-custom shadow-lg">
+    <div class="modal-header-custom bg-dark text-white p-3 d-flex justify-content-between align-items-center">
+      <h5 class="m-0 fw-bold text-uppercase small">
+        <i class="bi bi-gear-fill me-2"></i> {{ cementerioSeleccionado ? 'Actualizar Cementerio' : 'Registro de Cementerio' }}
+      </h5>
+      <button class="btn-close btn-close-white" (click)="cerrarModal()"></button>
+    </div>
+    <div class="p-4 bg-white">
+      <app-form-cementerio *ngIf="mostrarModal" [idEmpresaInput]="idEmpresa"
+        [cementerioAEditar]="cementerioSeleccionado" (cementerioCreado)="onCementerioGuardado()"
+        (alCancelar)="cerrarModal()">
+      </app-form-cementerio>
+    </div>
+  </div>
+</div>
+
+<app-modal-confirmacion *ngIf="mostrarModalEliminar && auth.esAdmin()"
+  [mensaje]="'¿Seguro que deseas eliminar ' + cementerioAEliminar?.nombre + '?'"
+  (confirmado)="confirmarEliminacion()" (cancelado)="mostrarModalEliminar = false">
+</app-modal-confirmacion>
+
+<app-mensajes-modal></app-mensajes-modal>
+<app-footer></app-footer>

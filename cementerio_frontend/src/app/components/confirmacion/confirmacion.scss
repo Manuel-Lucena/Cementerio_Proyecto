@@ -1,0 +1,27 @@
+@use '../../../styles/_variables' as v;
+
+
+.modal.show {
+  background: rgba(0, 0, 0, 0.5);
+  backdrop-filter: blur(2px);
+}
+
+.modal-content {
+  border-radius: 4px;
+}
+
+
+.flex-fill {
+  flex: 1;
+  padding: 12px 0;
+  font-size: 0.85rem;
+}
+
+.btn-dark {
+  background-color: v.$color-texto-oscuro;
+  border-color: v.$color-texto-oscuro;
+  
+  &:hover {
+    background-color: #000;
+  }
+}

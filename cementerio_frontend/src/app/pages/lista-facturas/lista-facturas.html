@@ -1,0 +1,117 @@
+<app-navbar></app-navbar>
+
+<div class="container mt-5 mb-5">
+  <div class="header-section border-bottom pb-3 mb-4 d-flex justify-content-between align-items-center flex-wrap gap-3">
+    <div>
+      <h2 class="titulo-v fw-bold">Gestión de Facturación</h2>
+      <p class="text-muted small mb-0">Listado oficial de cobros y servicios contratados.</p>
+    </div>
+    <div class="search-box">
+      <div class="input-group shadow-sm">
+        <span class="input-group-text bg-white border-end-0"><i class="bi bi-search"></i></span>
+        <input type="text" class="form-control border-start-0" placeholder="Buscar por concepto o ID..." [(ngModel)]="filtroBusqueda">
+      </div>
+    </div>
+  </div>
+
+  <div class="filters-row mb-4 d-flex justify-content-end">
+    <div class="btn-group shadow-sm">
+      <button class="btn btn-outline-dark" [class.active]="filtroEstado === 'TODAS'" (click)="cambiarEstado('TODAS')">Todas</button>
+      <button class="btn btn-outline-warning" [class.active]="filtroEstado === 'Pendiente'" (click)="cambiarEstado('Pendiente')">Pendientes</button>
+      <button class="btn btn-outline-success" [class.active]="filtroEstado === 'Pagada'" (click)="cambiarEstado('Pagada')">Pagadas</button>
+      <button class="btn btn-outline-secondary" [class.active]="filtroEstado === 'Anulada'" (click)="cambiarEstado('Anulada')">Anuladas</button>
+    </div>
+  </div>
+
+  <div class="table-container shadow-sm bg-white rounded overflow-hidden">
+    <table class="table align-middle mb-0">
+      <thead class="bg-light text-uppercase small fw-bold">
+        <tr>
+          <th class="ps-4 py-3">Concepto</th>
+          <th class="py-3 text-center cursor-pointer" (click)="toggleOrden('fechaFactura')">
+            Fecha <i class="bi" [ngClass]="ordenarPor === 'fechaFactura' ? (direccionOrden === 'asc' ? 'bi-sort-down' : 'bi-sort-up') : 'bi-calendar3 ms-1'"></i>
+          </th>
+          <th class="py-3 text-center">Sepultura</th>
+          <th class="py-3 text-center cursor-pointer" (click)="toggleOrden('total')">
+            Importe <i class="bi" [ngClass]="ordenarPor === 'total' ? (direccionOrden === 'asc' ? 'bi-sort-numeric-up' : 'bi-sort-numeric-down') : 'bi-arrow-down-up ms-1'"></i>
+          </th>
+          <th class="py-3 text-center">Estado</th>
+          <th class="pe-4 py-3 text-center">Acciones</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngIf="cargando">
+          <td colspan="6" class="text-center py-5">
+            <div class="spinner-border text-dark" role="status"></div>
+          </td>
+        </tr>
+
+        <tr *ngFor="let factura of facturasMostradas" [ngClass]="{'opacity-50 bg-light': factura.estadoNormal === 'ANULADA'}">
+          <td class="ps-4 py-3"><span class="fw-bold">{{ factura.conceptoReal }}</span></td>
+          <td class="py-3 text-center">{{ factura.fechaFactura | date:'dd/MM/yyyy' }}</td>
+          <td class="py-3 text-center text-muted">{{ factura.codigoSepultura || 'N/A' }}</td>
+          <td class="py-3 text-center fw-bold">{{ factura.total | currency:'EUR' }}</td>
+          <td class="py-3 text-center">
+            <span class="badge rounded-pill px-3 py-2 shadow-sm"
+              [ngClass]="{
+                'bg-warning text-dark': factura.estadoNormal === 'PENDIENTE', 
+                'bg-success': factura.estadoNormal === 'PAGADA', 
+                'bg-secondary': factura.estadoNormal === 'ANULADA'}">
+              {{ factura.estadoNormal }}
+            </span>
+          </td>
+          <td class="pe-4 py-3 text-center">
+            <div class="d-flex justify-content-center gap-2">
+              <ng-container *ngIf="factura.estadoNormal === 'PENDIENTE'">
+                <button class="btn btn-success btn-sm px-3 fw-bold shadow-sm" (click)="pagar(factura.id)">PAGAR</button>
+                <button class="btn btn-outline-danger btn-sm" (click)="prepararAnulacion(factura.id)">ANULAR</button>
+              </ng-container>
+              
+              <button *ngIf="factura.estadoNormal === 'PAGADA'" class="btn btn-dark btn-sm shadow-sm" (click)="imprimirFactura(factura)">
+                <i class="bi bi-file-pdf"></i> PDF
+              </button>
+              
+              <span *ngIf="factura.estadoNormal === 'ANULADA'" class="text-muted small">Sin acciones</span>
+            </div>
+          </td>
+        </tr>
+        
+        <tr *ngIf="!cargando && facturasMostradas.length === 0">
+          <td colspan="6" class="text-center py-4 text-muted">No se encontraron facturas.</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <div class="d-flex justify-content-between align-items-center p-3 bg-light border-top">
+      <div class="small text-muted">
+        Total: <strong>{{ totalElementos }}</strong> registros
+      </div>
+      <nav *ngIf="totalPaginas > 1">
+        <ul class="pagination pagination-sm mb-0">
+          <li class="page-item" [class.disabled]="paginaActual === 0">
+            <button class="page-link" (click)="cambiarPagina(paginaActual - 1)"><i class="bi bi-chevron-left"></i></button>
+          </li>
+          <li class="page-item" *ngFor="let p of [].constructor(totalPaginas); let i = index" [class.active]="i === paginaActual">
+            <button class="page-link" (click)="cambiarPagina(i)">{{ i + 1 }}</button>
+          </li>
+          <li class="page-item" [class.disabled]="paginaActual === totalPaginas - 1">
+            <button class="page-link" (click)="cambiarPagina(paginaActual + 1)"><i class="bi bi-chevron-right"></i></button>
+          </li>
+        </ul>
+      </nav>
+    </div>
+  </div>
+</div>
+
+<app-footer></app-footer>
+
+<app-modal-confirmacion 
+  *ngIf="mostrarModalConfirmarAnulacion" 
+  [titulo]="'Anular Factura'" 
+  [mensaje]="'¿Seguro que deseas anular esta factura? Esta acción es irreversible.'" 
+  [textoBotonConfirmar]="'SÍ, ANULAR'"
+  (confirmado)="confirmarAnulacion()" 
+  (cancelado)="cancelarAnulacion()">
+</app-modal-confirmacion>
+
+<app-mensajes-modal></app-mensajes-modal>

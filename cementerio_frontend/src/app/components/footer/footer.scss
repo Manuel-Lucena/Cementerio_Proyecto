@@ -1,0 +1,16 @@
+@use '../../../styles/_variables' as v;
+@use '../../../styles/_mixins' as m;
+
+.footer {
+  background-color: v.$color-fondo-oscuro;
+  color: v.$color-texto-claro; 
+}
+
+.footer a {
+  color: v.$color-principal; 
+  text-decoration: none;
+  
+  &:hover {
+    color: v.$color-secundario; 
+  }
+}

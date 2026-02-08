@@ -1,0 +1,78 @@
+<div class="container mt-5">
+  <div class="row justify-content-center">
+    <div class="col-md-8 col-lg-6">
+      
+      <div *ngIf="cargando" class="text-center py-5">
+        <div class="spinner-border text-secondary" role="status"></div>
+        <p class="text-muted mt-3">Verificando estado de la transacción...</p>
+      </div>
+
+      <div *ngIf="!cargando && pago">
+        
+        <div *ngIf="pago.estado === 'SUCCESS'" class="card border-0 shadow-sm">
+          <div class="card-header bg-white border-bottom py-3 text-center">
+            <i class="bi bi-shield-check text-success fs-1"></i>
+            <h2 class="h4 mt-2 mb-0">Comprobante de Pago</h2>
+          </div>
+          <div class="card-body p-4">
+            <div class="alert alert-success text-center mb-4">
+              La operación se ha completado satisfactoriamente.
+            </div>
+            
+            <table class="table table-sm table-borderless mb-0">
+              <tbody>
+                <tr>
+                  <td class="text-muted">Referencia:</td>
+                  <td class="text-end fw-bold">{{ pago.orderId }}</td>
+                </tr>
+                <tr>
+                  <td class="text-muted">Importe abonado:</td>
+                  <td class="text-end fw-bold">{{ pago.total | currency:'EUR' }}</td>
+                </tr>
+                <tr>
+                  <td class="text-muted">Fecha y hora:</td>
+                  <td class="text-end fw-bold">{{ pago.fechaPago | date:'dd/MM/yyyy HH:mm' }}</td>
+                </tr>
+                <tr>
+                  <td class="text-muted">Estado:</td>
+                  <td class="text-end"><span class="badge bg-success">PAGADA</span></td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+          <div class="card-footer bg-light border-0 py-3 text-center">
+            <button routerLink="/mis-facturas" class="btn btn-dark px-4">
+              Finalizar y volver
+            </button>
+          </div>
+        </div>
+
+        <div *ngIf="pago.estado === 'FAILED'" class="card border-0 shadow-sm">
+          <div class="card-header bg-white border-bottom py-3 text-center">
+            <i class="bi bi-exclamation-triangle text-danger fs-1"></i>
+            <h2 class="h4 mt-2 mb-0">Transacción Denegada</h2>
+          </div>
+          <div class="card-body p-4">
+            <p class="text-center text-muted">No se ha podido procesar el cargo. Por favor, verifique los datos de su tarjeta o contacte con su entidad bancaria.</p>
+          </div>
+          <div class="card-footer bg-light border-0 py-3 text-center">
+            <button routerLink="/mis-facturas" class="btn btn-outline-dark px-4">
+              Reintentar desde facturas
+            </button>
+          </div>
+        </div>
+
+      </div>
+
+      <div *ngIf="!cargando && !pago" class="card border-0 shadow-sm">
+        <div class="card-body p-5 text-center">
+          <i class="bi bi-search text-muted fs-1"></i>
+          <h3 class="h5 mt-3">Operación no encontrada</h3>
+          <p class="text-muted small">No se han podido recuperar los detalles del pago.</p>
+          <button routerLink="/mis-facturas" class="btn btn-secondary mt-3">Volver al panel</button>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
